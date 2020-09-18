@@ -15,3 +15,10 @@ code {
 li {
   list-style-type: none;
 }
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
