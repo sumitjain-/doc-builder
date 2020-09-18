@@ -1,11 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import Sidebar from '../sidebar';
 
-export default connect(store => store)(function AppContainer(props) {
-    console.log(props);
+export default connect(store => store)(function AppContainer({userSettings, dispatch}) {
+    const {sheetData} = userSettings;
+    console.log(sheetData);
     return (
         <div className="app-container">
-            App here
+            <div className="row">
+                <Sidebar />
+            </div>
         </div>
     )
 })
