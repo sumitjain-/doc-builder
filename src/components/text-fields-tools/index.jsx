@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {generateNewTextField} from "../../utils";
 
 const UniqueTextFieldTools = connect(store => store)(({item, dispatch}) => {
         const [previewText, setPreviewText] = React.useState(item.previewText || item.key);
@@ -34,18 +35,18 @@ const UniqueTextFieldTools = connect(store => store)(({item, dispatch}) => {
             })
         }
 
-    function saveWeightPreferences(e) {
-        dispatch({
-            type: 'SET_TEXT_FIELDS',
-            payload: [{
-                ...item,
-                bold: !item.bold,
-            }],
-        })
-    }
+        function saveWeightPreferences(e) {
+            dispatch({
+                type: 'SET_TEXT_FIELDS',
+                payload: [{
+                    ...item,
+                    bold: !item.bold,
+                }],
+            })
+        }
 
         return (
-            <form className="form-group" onSubmit={function (e) {
+            <form className="form-group p-2 bg-light rounded shadow-1" onSubmit={function (e) {
                 e.stopPropagation();
                 e.preventDefault();
 
@@ -77,17 +78,72 @@ const UniqueTextFieldTools = connect(store => store)(({item, dispatch}) => {
                         B
                     </span>
                 </div>
+                <button type="button" className="btn btn-danger mt-2" onClick={() => {
+                    const confirmation = window.confirm(`Are you sure you want to remove ${item.key} from the template?`);
+                    if (confirmation) {
+                        dispatch({
+                            type: 'REMOVE_TEXT_FIELD',
+                            payload: item.key,
+                        });
+                    }
+                }}>
+                    Remove
+                </button>
             </form>
         );
     }
 )
-export default connect(store => store)(function TextFieldsTools({userSettings, dispatch}) {
+
+const AddStaticText = connect(store => store)(function ({userSettings, dispatch}) {
+    return (
+        <button className="btn btn-secondary"
+                onClick={() => {
+                    dispatch({
+                        type: 'SET_TEXT_FIELDS',
+                        payload: [generateNewTextField(userSettings.textFields)],
+                    });
+                }}
+        >Add Static Text</button>
+    );
+});
+
+const AddDynamicText = connect(store => store)(function ({userSettings, dispatch, missingFields}) {
+    const selectRef = React.useRef(null);
+    return (
+        <>
+            <select name="" id="" className="form-control mt-2" ref={selectRef}>
+                {missingFields.map(a => (
+                    <option key={a} value={a}>{a}</option>
+                ))}
+            </select>
+            <button className="btn btn-secondary mt-2"
+                    onClick={() => {
+                        dispatch({
+                            type: 'SET_TEXT_FIELDS',
+                            payload: [generateNewTextField(userSettings.textFields, selectRef.current.value)],
+                        });
+                    }}
+            >Add Dynamic Field
+            </button>
+        </>
+    );
+});
+
+
+export default connect(store => store)(function TextFieldsTools({userSettings}) {
     const {textFields} = userSettings;
+    const textFieldKeys = textFields.map(a => a.key);
+    const missingFields = userSettings.sheetData.headers.filter(a => !textFieldKeys.includes(a));
+
     return (
         <div className="mt-4">
             {textFields.map((field, idx) => (
                 <UniqueTextFieldTools item={field} key={field.key}/>
             ))}
+            <AddStaticText/>
+            {!!missingFields.length && (
+                <AddDynamicText missingFields={missingFields}/>
+            )}
         </div>
     );
 })

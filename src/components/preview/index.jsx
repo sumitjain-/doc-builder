@@ -9,7 +9,7 @@ function Index({userSettings}) {
     return (
         <div className="col-9">
             <h2>Preview</h2>
-            <div className="preview-box position-relative" ref={previewContainerRef}
+            <div className="preview-box position-relative shadow-1" ref={previewContainerRef}
                  style={{width: 297 * expandFactor, height: 210 * expandFactor}}>
                 {!!bgImage && (
                     <img className="no-select" src={bgImage} alt="" style={{

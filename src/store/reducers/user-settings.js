@@ -71,6 +71,11 @@ export default function (state = (mock || initState), action) {
             return {
                 ...state, textFields: [...updatedTextFields, ...newFields],
             };
+        case 'REMOVE_TEXT_FIELD':
+            const updatedTextFields2 = state.textFields.filter(a => a.key !== action.payload);
+            return {
+                ...state, textFields: updatedTextFields2,
+            };
         case 'RESET_BG_IMAGE':
             return {...state, bgImage: ''};
         case 'RESET_SHEET_DATA':

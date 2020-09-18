@@ -125,7 +125,7 @@ export function generateBundle(userSettings) {
         userSettings.textFields.forEach(field => {
             doc.setTextColor(field.color);
             doc.setFontSize(field.size);
-            doc.text(dataRow[field.key],
+            doc.text((dataRow[field.key] || field.previewText),
                 field.x + pdfConfigs.textOffset[0],
                 field.y + pdfConfigs.textOffset[1],
                 pdfConfigs.textOptions,
@@ -153,6 +153,24 @@ export function generateTextField(a, idx) {
         static: false,
         key: a,
         size: 14,
-        color: '#000',
+        color: '#000000',
     };
+}
+
+export function generateNewTextField(textFields, key) {
+    let fieldKey = 1;
+    const result = {
+        x: 0, y: (textFields.length * 20),
+        static: true,
+        key: key || `Static-Text-${fieldKey}`,
+        size: 14,
+        color: '#000000',
+    };
+    if (!key) {
+        while(textFields.find(a => a.key === result.key)) {
+            fieldKey += 1;
+            result.key = `Static-Text-${fieldKey}`;
+        }
+    }
+    return result;
 }
