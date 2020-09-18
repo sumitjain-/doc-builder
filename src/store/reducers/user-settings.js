@@ -5,7 +5,7 @@ const initState = {
 };
 
 
-export default function (state = mock, action) {
+export default function (state = initState, action) {
     switch (action.type) {
         case 'SET_SHEET_DATA':
             return {...state, sheetData: action.payload};
