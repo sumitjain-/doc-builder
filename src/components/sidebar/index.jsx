@@ -7,7 +7,6 @@ import {generateSample, generateBundle} from '../../utils';
 
 export default connect(store => store)(function Sidebar({userSettings, dispatch}) {
     const {sheetData} = userSettings;
-    console.log(sheetData);
     return (
         <div className="sidebar col-3 text-left">
             <DataPicker />

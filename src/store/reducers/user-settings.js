@@ -17,8 +17,6 @@ export default function (state = initState, action) {
             action.payload.forEach(newTextField => {
                 const idxInOldList = updatedTextFields.findIndex(a => (a.key === newTextField.key));
                 if (idxInOldList >= 0) {
-                    console.log(`key ${newTextField.key} found in list`);
-                    console.log(newTextField.x, newTextField.y);
                     updatedTextFields[idxInOldList] = newTextField;
                 } else {
                     newFields.push(newTextField);

@@ -4,7 +4,6 @@ import {acceptExcelData} from "../../utils";
 
 export default connect(store => store)(function DataPicker({userSettings, dispatch}) {
     const {sheetData} = userSettings;
-    console.log(sheetData);
     return (
         <>
             <label htmlFor="file-picker">Choose Data File</label>
