@@ -49,6 +49,9 @@ export default connect(store => store)(function TextField(props) {
                   cursor: 'pointer',
                   userSelect: 'none',
                   zIndex: idx + 1,
+                  color: obj.color,
+                  fontSize: obj.size,
+                  fontWeight: obj.bold ? 700 : 400,
                   ...position,
               }}>{obj.previewText || obj.key}</span>
     )

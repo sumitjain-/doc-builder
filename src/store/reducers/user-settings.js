@@ -1,3 +1,49 @@
+const mock = {
+    "sheetData": {
+        "headers": [
+            "Name",
+            "Designation"
+        ],
+        "rows": [
+            {
+                "Name": "Sumit Jain",
+                "Designation": "Son"
+            },
+            {
+                "Name": "Sunil Jain",
+                "Designation": "Dad"
+            },
+            {
+                "Name": "Siddharth Jain",
+                "Designation": "Son"
+            },
+            {
+                "Name": "Richa Jain",
+                "Designation": "Mom"
+            }
+        ]
+    },
+    "bgImage": "",
+    "textFields": [
+        {
+            "x": 0,
+            "y": 0,
+            "static": false,
+            "key": "Name",
+            "size": 14,
+            "color": "#000000",
+        },
+        {
+            "x": 0,
+            "y": 20,
+            "static": false,
+            "key": "Designation",
+            "size": 14,
+            "color": "#000000",
+        }
+    ]
+};
+
 const initState = {
     sheetData: {headers: [], rows: []},
     bgImage: '',
@@ -5,7 +51,7 @@ const initState = {
 };
 
 
-export default function (state = initState, action) {
+export default function (state = (mock || initState), action) {
     switch (action.type) {
         case 'SET_SHEET_DATA':
             return {...state, sheetData: action.payload};
@@ -25,6 +71,10 @@ export default function (state = initState, action) {
             return {
                 ...state, textFields: [...updatedTextFields, ...newFields],
             };
+        case 'RESET_BG_IMAGE':
+            return {...state, bgImage: ''};
+        case 'RESET_SHEET_DATA':
+            return {...state, sheetData: {headers: [], rows: []}, textFields: []};
         default:
             return state;
     }
