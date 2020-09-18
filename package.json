@@ -91,7 +91,6 @@
   "bugs": {
     "url": "https://github.com/sumitjain-/doc-builder/issues"
   },
-  "homepage": "https://github.com/sumitjain-/doc-builder#readme",
   "jest": {
     "roots": [
       "<rootDir>/src"
