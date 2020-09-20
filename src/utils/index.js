@@ -2,6 +2,7 @@ import XLSX from "xlsx";
 import {jsPDF} from 'jspdf';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
+import {canvasDimensions} from '../constants';
 
 /* list of supported Excel file types */
 export const SheetJSFT = [
@@ -80,8 +81,7 @@ function sanitizeFileName(f) {
 }
 
 export function generateSample(userSettings) {
-    const boundingRect = document.querySelector('.preview-box').getBoundingClientRect();
-    const dim = [boundingRect.width, boundingRect.height];
+    const dim = [canvasDimensions.width, canvasDimensions.height];
     const doc = new jsPDF({
         ...pdfConfigs.base,
         format: dim,
@@ -105,8 +105,7 @@ export function generateSample(userSettings) {
 }
 
 export function generateBundle(userSettings) {
-    const boundingRect = document.querySelector('.preview-box').getBoundingClientRect();
-    const dim = [boundingRect.width, boundingRect.height];
+    const dim = [canvasDimensions.width, canvasDimensions.height];
 
     const primaryKey = userSettings.sheetData.headers[0];
 
