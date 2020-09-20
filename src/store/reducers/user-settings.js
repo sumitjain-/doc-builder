@@ -1,3 +1,5 @@
+import {jsPDF} from "jspdf";
+
 const mock = {
     "sheetData": {
         "headers": [
@@ -41,15 +43,20 @@ const mock = {
             "size": 14,
             "color": "#000000",
         }
-    ]
+    ],
+    canvasDimensions: {width: 891, height: 630},
 };
 
 const initState = {
     sheetData: {headers: [], rows: []},
     bgImage: '',
     textFields: [],
+    canvasDimensions: {width: 891, height: 630},
 };
 
+const fontList = (new jsPDF()).getFontList();
+mock.fontList = fontList;
+initState.fontList = fontList;
 
 export default function (state = (mock || initState), action) {
     switch (action.type) {

@@ -2,47 +2,41 @@ import React from 'react';
 import {connect} from "react-redux";
 import {generateNewTextField} from "../../utils";
 
-const UniqueTextFieldTools = connect(store => store)(({item, dispatch}) => {
+const UniqueTextFieldTools = connect(store => store)(({item, dispatch, userSettings}) => {
         const [previewText, setPreviewText] = React.useState(item.previewText || item.key);
 
-        function savePreviewPreferences() {
+        function savePreference(key, value) {
             dispatch({
                 type: 'SET_TEXT_FIELDS',
                 payload: [{
                     ...item,
-                    previewText,
+                    [key]: value,
                 }],
             })
+        }
+
+        function savePreviewPreferences() {
+            savePreference('previewText', previewText);
         }
 
         function saveSizePreferences(e) {
-            dispatch({
-                type: 'SET_TEXT_FIELDS',
-                payload: [{
-                    ...item,
-                    size: parseInt(e.target.value),
-                }],
-            })
+            savePreference('size', parseInt(e.target.value));
         }
 
         function saveColorPreferences(e) {
-            dispatch({
-                type: 'SET_TEXT_FIELDS',
-                payload: [{
-                    ...item,
-                    color: e.target.value,
-                }],
-            })
+            savePreference('color', e.target.value);
         }
 
-        function saveWeightPreferences(e) {
-            dispatch({
-                type: 'SET_TEXT_FIELDS',
-                payload: [{
-                    ...item,
-                    bold: !item.bold,
-                }],
-            })
+        function saveWeightPreferences() {
+            savePreference('bold', !item.bold);
+        }
+
+        function saveStylePreferences() {
+            savePreference('italic', !item.italic);
+        }
+
+        function saveFontPreferences(e) {
+            savePreference('font', e.target.value);
         }
 
         return (
@@ -64,6 +58,13 @@ const UniqueTextFieldTools = connect(store => store)(({item, dispatch}) => {
                        }}
                 />
                 <div className="d-flex text-tools mt-1">
+                    <select className="form-control" onChange={saveFontPreferences} value={item.font || 'helvetica'}>
+                        {Object.keys(userSettings.fontList).map(opt => (
+                            <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="d-flex text-tools mt-1">
                     <input className="form-control" type="color" name={`color-${item.key}`} value={item.color}
                            onChange={saveColorPreferences}
                            onBlur={saveColorPreferences}
@@ -72,6 +73,14 @@ const UniqueTextFieldTools = connect(store => store)(({item, dispatch}) => {
                            onChange={saveSizePreferences}
                            onBlur={saveSizePreferences}
                     />
+                    <span className="d-inline-block text-center form-control font-weight-bold no-select"
+                          style={{
+                              fontStyle: 'italic',
+                              ...(item.italic ? {background: '#ced4da', color: '#fff'} : {})
+                          }}
+                          onClick={saveStylePreferences}>
+                        I
+                    </span>
                     <span className="d-inline-block text-center form-control font-weight-bold no-select"
                           style={item.bold ? {background: '#ced4da', color: '#fff'} : {}}
                           onClick={saveWeightPreferences}>

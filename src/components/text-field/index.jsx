@@ -52,6 +52,8 @@ export default connect(store => store)(function TextField(props) {
                   color: obj.color,
                   fontSize: obj.size,
                   fontWeight: obj.bold ? 700 : 400,
+                  fontStyle: obj.italic ? 'italic' : '',
+                  fontFamily: obj.font || 'helvetica',
                   ...position,
               }}>{obj.previewText || obj.key}</span>
     )

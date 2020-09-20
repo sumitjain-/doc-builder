@@ -80,6 +80,34 @@ function sanitizeFileName(f) {
     return f.replace(' ', '-');
 }
 
+function textWriterGenerator(doc) {
+
+    return (field) => {
+        const font = field.font || 'helvetica';
+        const fontSettings = (doc.getFontList() || {[font]: ['']})[font];
+
+        doc.setTextColor(field.color);
+        doc.setFontSize(field.size);
+
+        let styleIdx = 0;
+        if (field.bold) {
+            styleIdx += 1;
+        }
+        if (field.italic) {
+            styleIdx += 2;
+        }
+
+        const fontStyle = fontSettings[styleIdx];
+        doc.setFont(font, fontStyle);
+        doc.text((field.previewText || field.key),
+            field.x + pdfConfigs.textOffset[0],
+            field.y + pdfConfigs.textOffset[1],
+            pdfConfigs.textOptions,
+        );
+    }
+}
+
+
 export function generateSample(userSettings) {
     const dim = [canvasDimensions.width, canvasDimensions.height];
     const doc = new jsPDF({
@@ -91,15 +119,10 @@ export function generateSample(userSettings) {
         doc.addImage(userSettings.bgImage, 0, 0, dim[0], dim[1]);
     }
 
-    userSettings.textFields.forEach(field => {
-        doc.setTextColor(field.color);
-        doc.setFontSize(field.size);
-        doc.text((field.previewText || field.key),
-            field.x + pdfConfigs.textOffset[0],
-            field.y + pdfConfigs.textOffset[1],
-            pdfConfigs.textOptions,
-        );
-    });
+    console.log(doc.getFontList());
+
+    const textWriter = textWriterGenerator(doc);
+    userSettings.textFields.forEach(textWriter);
 
     doc.save("doc-builder-sample.pdf")
 }
@@ -121,15 +144,8 @@ export function generateBundle(userSettings) {
             doc.addImage(userSettings.bgImage, 0, 0, dim[0], dim[1]);
         }
 
-        userSettings.textFields.forEach(field => {
-            doc.setTextColor(field.color);
-            doc.setFontSize(field.size);
-            doc.text((dataRow[field.key] || field.previewText),
-                field.x + pdfConfigs.textOffset[0],
-                field.y + pdfConfigs.textOffset[1],
-                pdfConfigs.textOptions,
-            );
-        });
+        const textWriter = textWriterGenerator(doc);
+        userSettings.textFields.forEach(textWriter);
 
         const filename = `${sanitizeFileName(dataRow[primaryKey])}.pdf`;
 
