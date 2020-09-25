@@ -2,7 +2,7 @@ import XLSX from "xlsx";
 import {jsPDF} from 'jspdf';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import {canvasDimensions} from '../constants';
+import {canvasDimensions, defaultTextAttributes} from '../constants';
 
 /* list of supported Excel file types */
 export const SheetJSFT = [
@@ -118,9 +118,7 @@ export function generateSample(userSettings) {
     if (userSettings.bgImage) {
         doc.addImage(userSettings.bgImage, 0, 0, dim[0], dim[1]);
     }
-
-    console.log(doc.getFontList());
-
+    doc.setLineHeightFactor(1);
     const textWriter = textWriterGenerator(doc);
     userSettings.textFields.forEach(textWriter);
 
@@ -164,22 +162,20 @@ export function generateBundle(userSettings) {
 
 export function generateTextField(a, idx) {
     return {
-        x: 0, y: (idx * 20),
+        ...defaultTextAttributes,
+        x: 0, y: (idx * defaultTextAttributes.size * 1.25),
         static: false,
         key: a,
-        size: 14,
-        color: '#000000',
     };
 }
 
 export function generateNewTextField(textFields, key) {
     let fieldKey = 1;
     const result = {
+        ...defaultTextAttributes,
         x: 0, y: (textFields.length * 20),
         static: true,
         key: key || `Static-Text-${fieldKey}`,
-        size: 14,
-        color: '#000000',
     };
     if (!key) {
         while(textFields.find(a => a.key === result.key)) {

@@ -58,7 +58,7 @@ const fontList = (new jsPDF()).getFontList();
 mock.fontList = fontList;
 initState.fontList = fontList;
 
-export default function (state = (mock || initState), action) {
+export default function (state = (initState), action) {
     switch (action.type) {
         case 'SET_SHEET_DATA':
             return {...state, sheetData: action.payload};
